@@ -31,20 +31,20 @@ function app () {
 }
 
 describe('featurePolicy', function () {
-  it('fails without at least 1 directive', function () {
+  it('fails without at least 1 feature', function () {
     assert.throws(() => featurePolicy(), Error)
     assert.throws(() => featurePolicy({}), Error)
-    assert.throws(() => featurePolicy({ directives: null }), Error)
-    assert.throws(() => featurePolicy({ directives: {} }), Error)
+    assert.throws(() => featurePolicy({ features: null }), Error)
+    assert.throws(() => featurePolicy({ features: {} }), Error)
   })
 
-  it('fails with directives outside the whitelist', function () {
+  it('fails with features outside the whitelist', function () {
     assert.throws(() => featurePolicy({
-      directives: { garbage: true }
+      features: { garbage: true }
     }), Error)
   })
 
-  it("fails if a directive's value is not an array", function () {
+  it("fails if a feature's value is not an array", function () {
     [
       "'self'",
       null,
@@ -58,47 +58,47 @@ describe('featurePolicy', function () {
       }
     ].forEach(function (value) {
       assert.throws(() => featurePolicy({
-        directives: { vibrate: value }
+        features: { vibrate: value }
       }), Error)
     })
   })
 
   it('fails if "self" or "none" are not quoted', function () {
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ['self'] }
+      features: { vibrate: ['self'] }
     }), Error)
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ['none'] }
+      features: { vibrate: ['none'] }
     }), Error)
   })
 
-  it('fails if a directive value is an empty array', function () {
+  it("fails if a feature's value is an empty array", function () {
     assert.throws(() => featurePolicy({
-      directives: { vibrate: [] }
+      features: { vibrate: [] }
     }), Error)
   })
 
   it('fails if a feature value contains "*" and additional values', function () {
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ['*', 'example.com'] }
+      features: { vibrate: ['*', 'example.com'] }
     }), Error)
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ['example.com', '*'] }
+      features: { vibrate: ['example.com', '*'] }
     }), Error)
   })
 
   it('fails if a feature value contains "none" and additional values', function () {
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ["'none'", 'example.com'] }
+      features: { vibrate: ["'none'", 'example.com'] }
     }), Error)
     assert.throws(() => featurePolicy({
-      directives: { vibrate: ['example.com', "'none'"] }
+      features: { vibrate: ['example.com', "'none'"] }
     }), Error)
   })
 
   it('can set "vibrate" to "*"', function () {
     return supertest(app({
-      directives: { vibrate: ['*'] }
+      features: { vibrate: ['*'] }
     }))
       .get('/')
       .expect('Feature-Policy', 'vibrate *')
@@ -107,7 +107,7 @@ describe('featurePolicy', function () {
 
   it('can set "vibrate" to "self"', function () {
     return supertest(app({
-      directives: { vibrate: ["'self'"] }
+      features: { vibrate: ["'self'"] }
     }))
       .get('/')
       .expect('Feature-Policy', "vibrate 'self'")
@@ -116,7 +116,7 @@ describe('featurePolicy', function () {
 
   it('can set "vibrate" to "none"', function () {
     return supertest(app({
-      directives: { vibrate: ["'none'"] }
+      features: { vibrate: ["'none'"] }
     }))
       .get('/')
       .expect('Feature-Policy', "vibrate 'none'")
@@ -125,7 +125,7 @@ describe('featurePolicy', function () {
 
   it('can set "vibrate" to contain domains', function () {
     return supertest(app({
-      directives: { vibrate: ['example.com', 'evanhahn.com'] }
+      features: { vibrate: ['example.com', 'evanhahn.com'] }
     }))
       .get('/')
       .expect('Feature-Policy', 'vibrate example.com evanhahn.com')
@@ -134,10 +134,10 @@ describe('featurePolicy', function () {
 
   it('can set all values in the whitelist to "*"', function () {
     var tasks = WHITELISTED.map(function (feature) {
-      var directives = {}
-      directives[feature] = ['*']
+      var features = {}
+      features[feature] = ['*']
 
-      return supertest(app({ directives: directives }))
+      return supertest(app({ features: features }))
         .get('/')
         .expect('Feature-Policy', dasherize(feature) + ' *')
         .expect('Hello world!')
@@ -148,10 +148,10 @@ describe('featurePolicy', function () {
 
   it('can set all values in the whitelist to "self"', function () {
     var tasks = WHITELISTED.map(function (feature) {
-      var directives = {}
-      directives[feature] = ["'self'"]
+      var features = {}
+      features[feature] = ["'self'"]
 
-      return supertest(app({ directives: directives }))
+      return supertest(app({ features: features }))
         .get('/')
         .expect('Feature-Policy', dasherize(feature) + " 'self'")
         .expect('Hello world!')
@@ -162,10 +162,10 @@ describe('featurePolicy', function () {
 
   it('can set all values in the whitelist to "none"', function () {
     var tasks = WHITELISTED.map(function (feature) {
-      var directives = {}
-      directives[feature] = ["'none'"]
+      var features = {}
+      features[feature] = ["'none'"]
 
-      return supertest(app({ directives: directives }))
+      return supertest(app({ features: features }))
         .get('/')
         .expect('Feature-Policy', dasherize(feature) + " 'none'")
         .expect('Hello world!')
@@ -176,10 +176,10 @@ describe('featurePolicy', function () {
 
   it('can set all values in the whitelist to domains', function () {
     var tasks = WHITELISTED.map(function (feature) {
-      var directives = {}
-      directives[feature] = ['example.com', 'evanhahn.com']
+      var features = {}
+      features[feature] = ['example.com', 'evanhahn.com']
 
-      return supertest(app({ directives: directives }))
+      return supertest(app({ features: features }))
         .get('/')
         .expect('Feature-Policy', dasherize(feature) + ' example.com evanhahn.com')
         .expect('Hello world!')
@@ -189,25 +189,25 @@ describe('featurePolicy', function () {
   })
 
   it('can set everything all at once', function (done) {
-    var directives = WHITELISTED.reduce(function (result, feature) {
+    var features = WHITELISTED.reduce(function (result, feature) {
       var newFeatureObject = {}
       newFeatureObject[feature] = [feature + '.example.com']
       return Object.assign({}, result, newFeatureObject)
     }, {})
 
-    supertest(app({ directives: directives }))
+    supertest(app({ features: features }))
       .get('/')
       .expect('Hello world!')
       .end(function (err, res) {
         if (err) { return done(err) }
 
-        var directives = res.headers['feature-policy'].split(';')
+        var actualFeatures = res.headers['feature-policy'].split(';')
 
-        assert.strictEqual(directives.length, WHITELISTED.length)
+        assert.strictEqual(actualFeatures.length, WHITELISTED.length)
 
         WHITELISTED.forEach(function (feature) {
           var expectedStr = dasherize(feature) + ' ' + feature + '.example.com'
-          assert.notStrictEqual(directives.indexOf(expectedStr), -1)
+          assert.notStrictEqual(actualFeatures.indexOf(expectedStr), -1)
         })
 
         done()
@@ -217,7 +217,7 @@ describe('featurePolicy', function () {
   it('names its function and middleware', function () {
     assert.strictEqual(featurePolicy.name, 'featurePolicy')
     assert.strictEqual(featurePolicy.name, featurePolicy({
-      directives: { vibrate: ['*'] }
+      features: { vibrate: ['*'] }
     }).name)
   })
 })
