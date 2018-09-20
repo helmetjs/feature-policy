@@ -134,27 +134,85 @@ describe('featurePolicy', function () {
 
   it('can set all values in the whitelist to "*"', function () {
     var tasks = WHITELISTED.map(function (feature) {
-      return function () {
-        const directives = {}
-        directives[feature] = '*'
+      var directives = {}
+      directives[feature] = ['*']
 
-        return supertest(app({ directives: directives }))
-          .get('/')
-          .expect('Feature-Policy', dasherize(feature) + ' *')
-          .expect('Hello world!')
-      }
+      return supertest(app({ directives: directives }))
+        .get('/')
+        .expect('Feature-Policy', dasherize(feature) + ' *')
+        .expect('Hello world!')
     })
 
     return Promise.all(tasks)
   })
 
-  it('can set all values in the whitelist to "self"')
+  it('can set all values in the whitelist to "self"', function () {
+    var tasks = WHITELISTED.map(function (feature) {
+      var directives = {}
+      directives[feature] = ["'self'"]
 
-  it('can set all values in the whitelist to "none"')
+      return supertest(app({ directives: directives }))
+        .get('/')
+        .expect('Feature-Policy', dasherize(feature) + " 'self'")
+        .expect('Hello world!')
+    })
 
-  it('can set all values in the whitelist to domains')
+    return Promise.all(tasks)
+  })
 
-  it('can set everything all at once')
+  it('can set all values in the whitelist to "none"', function () {
+    var tasks = WHITELISTED.map(function (feature) {
+      var directives = {}
+      directives[feature] = ["'none'"]
+
+      return supertest(app({ directives: directives }))
+        .get('/')
+        .expect('Feature-Policy', dasherize(feature) + " 'none'")
+        .expect('Hello world!')
+    })
+
+    return Promise.all(tasks)
+  })
+
+  it('can set all values in the whitelist to domains', function () {
+    var tasks = WHITELISTED.map(function (feature) {
+      var directives = {}
+      directives[feature] = ['example.com', 'evanhahn.com']
+
+      return supertest(app({ directives: directives }))
+        .get('/')
+        .expect('Feature-Policy', dasherize(feature) + ' example.com evanhahn.com')
+        .expect('Hello world!')
+    })
+
+    return Promise.all(tasks)
+  })
+
+  it('can set everything all at once', function (done) {
+    var directives = WHITELISTED.reduce(function (result, feature) {
+      var newFeatureObject = {}
+      newFeatureObject[feature] = [feature + '.example.com']
+      return Object.assign({}, result, newFeatureObject)
+    }, {})
+
+    supertest(app({ directives: directives }))
+      .get('/')
+      .expect('Hello world!')
+      .end(function (err, res) {
+        if (err) { return done(err) }
+
+        var directives = res.headers['feature-policy'].split(';')
+
+        assert.strictEqual(directives.length, WHITELISTED.length)
+
+        WHITELISTED.forEach(function (feature) {
+          var expectedStr = dasherize(feature) + ' ' + feature + '.example.com'
+          assert.notStrictEqual(directives.indexOf(expectedStr), -1)
+        })
+
+        done()
+      })
+  })
 
   it('names its function and middleware', function () {
     assert.strictEqual(featurePolicy.name, 'featurePolicy')
