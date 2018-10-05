@@ -17,7 +17,24 @@ app.use(featurePolicy({
   features: {
     fullscreen: ["'self'"],
     vibrate: ["'none'"],
-    payment: ['example.com']
+    payment: ['example.com'],
+    syncXhr: ["'none'"]
   }
 }))
 ```
+
+The following features are currently supported:
+
+* `geolocation`
+* `midi`
+* `notifications`
+* `push`
+* `syncXhr`
+* `microphone`
+* `camera`
+* `magnetometer`
+* `gyroscope`
+* `speaker`
+* `vibrate`
+* `fullscreen`
+* `payment`
