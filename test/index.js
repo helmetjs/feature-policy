@@ -18,7 +18,11 @@ var WHITELISTED = [
   'speaker',
   'vibrate',
   'fullscreen',
-  'payment'
+  'payment',
+  'accelerometer',
+  'usb',
+  'vr',
+  'autoplay'
 ]
 
 function app () {
