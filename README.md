@@ -38,3 +38,7 @@ The following features are currently supported:
 * `vibrate`
 * `fullscreen`
 * `payment`
+* `accelerometer`
+* `usb`
+* `vr`
+* `autoplay`
