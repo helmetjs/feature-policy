@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Added
+- TypeScript definitions. See [#2](https://github.com/helmetjs/feature-policy/issues/2) and [helmet#188](https://github.com/helmetjs/helmet/issues/188)
 - Created a changelog
 
 ### Changed
