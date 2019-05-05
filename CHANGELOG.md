@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Added
+- 19 new features: `ambientLightSensor`, `documentDomain`, `documentWrite`, `encryptedMedia`, `fontDisplayLateSwap`, `layoutAnimations`, `legacyImageFormats`, `loadingFrameDefaultEager`, `oversizedImages`, `pictureInPicture`, `serial`, `syncScript`, `unoptimizedImages`, `unoptimizedLosslessImages`, `unoptimizedLossyImages`, `unsizedMedia`, `verticalScroll`, `wakeLock`, and `xr`
 - TypeScript definitions. See [#2](https://github.com/helmetjs/feature-policy/issues/2) and [helmet#188](https://github.com/helmetjs/helmet/issues/188)
 - Created a changelog
 
