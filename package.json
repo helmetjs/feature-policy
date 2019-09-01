@@ -2,7 +2,7 @@
   "name": "feature-policy",
   "author": "Evan Hahn <me@evanhahn.com> (https://evanhahn.com)",
   "description": "Middleware to set the Feature-Policy HTTP header",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
   "keywords": [
     "helmet",
