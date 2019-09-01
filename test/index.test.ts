@@ -86,6 +86,20 @@ describe('featurePolicy', () => {
     });
   });
 
+  it("fails if a feature's value is an array with a non-string", () => {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    expect(featurePolicy.bind(null, {
+      features: { vibrate: ['example.com', null] as any },
+    })).toThrow();
+    expect(featurePolicy.bind(null, {
+      features: { vibrate: ['example.com', 123] as any },
+    })).toThrow();
+    expect(featurePolicy.bind(null, {
+      features: { vibrate: [new String('example.com')] as any }, // eslint-disable-line no-new-wrappers
+    })).toThrow();
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+  });
+
   it('fails if "self" or "none" are not quoted', () => {
     expect(featurePolicy.bind(null, {
       features: { vibrate: ['self'] },
@@ -116,6 +130,12 @@ describe('featurePolicy', () => {
     })).toThrow();
     expect(featurePolicy.bind(null, {
       features: { vibrate: ['example.com', "'none'"] },
+    })).toThrow();
+  });
+
+  it('fails if a feature value contains duplicates', () => {
+    expect(featurePolicy.bind(null, {
+      features: { vibrate: ['example.com', 'example.com'] },
     })).toThrow();
   });
 

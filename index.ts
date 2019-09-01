@@ -5,9 +5,11 @@ interface FeaturePolicyOptions {
 }
 
 function isPlainObject(value: unknown): value is {[key: string]: unknown} {
-  return Boolean(value &&
+  return (
+    typeof value === 'object' &&
     !Array.isArray(value) &&
-    typeof value === 'object');
+    value !== null
+  );
 }
 
 function getHeaderValueFromOptions(options: unknown): string {
@@ -66,27 +68,28 @@ function getHeaderValueFromOptions(options: unknown): string {
 
     const featureValue = features[featureKeyCamelCase];
     if (!Array.isArray(featureValue) || featureValue.length === 0) {
-      throw new Error(`The value of the "${ featureKeyCamelCase }" feature must be a non-empty array.`);
+      throw new Error(`The value of the "${featureKeyCamelCase}" feature must be a non-empty array of strings.`);
     }
 
-    let containsStar = false;
-    let containsNone = false;
-    featureValue.forEach((allowed) => {
-      if (allowed === '*') {
-        containsStar = true;
-      } else if (allowed === "'none'") {
-        containsNone = true;
-      } else if (allowed === 'self') {
+    const allowedValuesSeen: Set<string> = new Set();
+
+    featureValue.forEach((allowedValue) => {
+      if (typeof allowedValue !== 'string') {
+        throw new Error(`The value of the "${featureKeyCamelCase}" feature contains a non-string, which is not supported.`);
+      } else if (allowedValuesSeen.has(allowedValue)) {
+        throw new Error(`The value of the "${featureKeyCamelCase}" feature contains duplicates, which it shouldn't.`);
+      } else if (allowedValue === 'self') {
         throw new Error("'self' must be quoted.");
-      } else if (allowed === 'none') {
+      } else if (allowedValue === 'none') {
         throw new Error("'none' must be quoted.");
       }
+      allowedValuesSeen.add(allowedValue);
     });
 
     if (featureValue.length > 1) {
-      if (containsStar) {
+      if (allowedValuesSeen.has('*')) {
         throw new Error(`The value of the "${featureKeyCamelCase}" feature cannot contain * and other values.`);
-      } else if (containsNone) {
+      } else if (allowedValuesSeen.has("'none'")) {
         throw new Error(`The value of the "${featureKeyCamelCase}" feature cannot contain 'none' and other values.`);
       }
     }

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+## Changed
+- Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
+- Non-strings are not allowed in the array
+
 ## 0.3.0 - 2019-05-05
 ### Added
 - 19 new features: `ambientLightSensor`, `documentDomain`, `documentWrite`, `encryptedMedia`, `fontDisplayLateSwap`, `layoutAnimations`, `legacyImageFormats`, `loadingFrameDefaultEager`, `oversizedImages`, `pictureInPicture`, `serial`, `syncScript`, `unoptimizedImages`, `unoptimizedLosslessImages`, `unoptimizedLossyImages`, `unsizedMedia`, `verticalScroll`, `wakeLock`, and `xr`
