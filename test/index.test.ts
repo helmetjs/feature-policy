@@ -5,7 +5,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import featurePolicy = require('..')
 
-const WHITELISTED = [
+const ALLOWED_FEATURE_NAMES = [
   'accelerometer',
   'ambientLightSensor',
   'autoplay',
@@ -61,7 +61,7 @@ describe('featurePolicy', () => {
     /* eslint-enable @typescript-eslint/no-explicit-any */
   });
 
-  it('fails with features outside the whitelist', () => {
+  it('fails with features outside the allowlist', () => {
     expect(featurePolicy.bind(null, {
       features: { garbage: ['*'] },
     })).toThrow();
@@ -155,8 +155,8 @@ describe('featurePolicy', () => {
       .expect('Hello world!');
   });
 
-  it('can set all values in the whitelist to "*"', () => {
-    return Promise.all(WHITELISTED.map(feature => {
+  it('can set all values in the allowlist to "*"', () => {
+    return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ['*'] };
 
       return request(app(featurePolicy({ features })))
@@ -166,8 +166,8 @@ describe('featurePolicy', () => {
     }));
   });
 
-  it('can set all values in the whitelist to "self"', () => {
-    return Promise.all(WHITELISTED.map(feature => {
+  it('can set all values in the allowlist to "self"', () => {
+    return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ["'self'"] };
 
       return request(app(featurePolicy({ features })))
@@ -177,8 +177,8 @@ describe('featurePolicy', () => {
     }));
   });
 
-  it('can set all values in the whitelist to "none"', () => {
-    return Promise.all(WHITELISTED.map(feature => {
+  it('can set all values in the allowlist to "none"', () => {
+    return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ["'none'"] };
 
       return request(app(featurePolicy({ features })))
@@ -188,8 +188,8 @@ describe('featurePolicy', () => {
     }));
   });
 
-  it('can set all values in the whitelist to domains', () => {
-    return Promise.all(WHITELISTED.map(feature => {
+  it('can set all values in the allowlist to domains', () => {
+    return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ['example.com', 'evanhahn.com'] };
 
       return request(app(featurePolicy({ features })))
@@ -200,7 +200,7 @@ describe('featurePolicy', () => {
   });
 
   it('can set everything all at once', async () => {
-    const features = WHITELISTED.reduce((result, feature) => ({
+    const features = ALLOWED_FEATURE_NAMES.reduce((result, feature) => ({
       ...result,
       [feature]: [`${feature}.example.com`],
     }), {});
@@ -213,9 +213,9 @@ describe('featurePolicy', () => {
     const actualFeaturesSet = new Set(actualFeatures);
 
     expect(actualFeatures).toHaveLength(actualFeaturesSet.size);
-    expect(actualFeatures).toHaveLength(WHITELISTED.length);
+    expect(actualFeatures).toHaveLength(ALLOWED_FEATURE_NAMES.length);
 
-    WHITELISTED.forEach((feature) => {
+    ALLOWED_FEATURE_NAMES.forEach((feature) => {
       const expectedStr = `${dashify(feature)} ${feature}.example.com`;
       expect(actualFeaturesSet.has(expectedStr)).toBeTruthy();
     });
