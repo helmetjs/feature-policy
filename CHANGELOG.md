@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 - 2019-09-01
 ## Changed
 - Drop support for Node <8
 - Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
