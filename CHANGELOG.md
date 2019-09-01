@@ -2,6 +2,7 @@
 
 ## Unreleased
 ## Changed
+- Drop support for Node <8
 - Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
 - Non-strings are not allowed in the array
 

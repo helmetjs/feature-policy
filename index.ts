@@ -61,12 +61,11 @@ function getHeaderValueFromOptions(options: unknown): string {
     throw new Error('featurePolicy must have a single key, "features", which is an object of features. See the documentation.');
   }
 
-  const result = Object.keys(features).map((featureKeyCamelCase) => {
+  const result = Object.entries(features).map(([featureKeyCamelCase, featureValue]) => {
     if (!Object.prototype.hasOwnProperty.call(FEATURES, featureKeyCamelCase)) {
       throw new Error(`featurePolicy does not support the "${ featureKeyCamelCase }" feature.`);
     }
 
-    const featureValue = features[featureKeyCamelCase];
     if (!Array.isArray(featureValue) || featureValue.length === 0) {
       throw new Error(`The value of the "${featureKeyCamelCase}" feature must be a non-empty array of strings.`);
     }
