@@ -26,10 +26,14 @@ The following features are currently supported:
 * `accelerometer`
 * `ambientLightSensor`
 * `autoplay`
+* `battery`
 * `camera`
+* `displayCapture`
 * `documentDomain`
 * `documentWrite`
 * `encryptedMedia`
+* `executionWhileNotRendered`
+* `executionWhileOutOfViewport`
 * `fontDisplayLateSwap`
 * `fullscreen`
 * `geolocation`
@@ -40,9 +44,13 @@ The following features are currently supported:
 * `magnetometer`
 * `microphone`
 * `midi`
+* `navigationOverride`
+* `notifications`
 * `oversizedImages`
 * `payment`
 * `pictureInPicture`
+* `publickeyCredentials`
+* `push`
 * `serial`
 * `speaker`
 * `syncScript`
@@ -57,3 +65,4 @@ The following features are currently supported:
 * `vr`
 * `wakeLock`
 * `xr`
+* `xrSpatialTracking`
