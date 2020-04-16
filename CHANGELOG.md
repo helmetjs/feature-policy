@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+## Added
+- 7 new features: `battery`, `displayCapture`, `executionWhileNotRendered`, `executionWhileOutOfViewport`, `navigationOverride`, `publickeyCredentials`, and `xrSpatialTracking`
+
 ## 0.4.0 - 2019-09-01
 ## Changed
 - Drop support for Node <8
