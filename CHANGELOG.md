@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 - 2020-04-16
 ## Added
 - 7 new features: `battery`, `displayCapture`, `executionWhileNotRendered`, `executionWhileOutOfViewport`, `navigationOverride`, `publickeyCredentials`, and `xrSpatialTracking`
 
