@@ -1,6 +1,5 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "errorOnDeprecated": true,
-  "bail": true
+  "errorOnDeprecated": true
 }
