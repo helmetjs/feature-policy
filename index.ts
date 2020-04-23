@@ -58,6 +58,12 @@ function getHeaderValueFromOptions(options: unknown): string {
     xr: 'xr',
     xrSpatialTracking: 'xr-spatial-tracking',
   };
+  // allow keys to be dashed too
+  Object.entries(FEATURES).forEach(([k, v]) => {
+    if (k.includes('-')) {
+      FEATURES[v] = v
+    }
+  });
 
   if (!isPlainObject(options)) {
     throw new Error('featurePolicy must be called with an object argument. See the documentation.');
