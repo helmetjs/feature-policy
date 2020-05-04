@@ -2,57 +2,78 @@ import connect from 'connect';
 import request from 'supertest';
 import dashify from 'dashify';
 import { IncomingMessage, ServerResponse } from 'http';
-import decamelize from 'decamelize';
 
 import featurePolicy = require('..')
 
 const ALLOWED_FEATURE_NAMES = [
   'accelerometer',
   'ambientLightSensor',
+  'ambient-light-sensor',
   'autoplay',
   'battery',
   'camera',
   'displayCapture',
+  'display-capture',
   'documentDomain',
+  'document-domain',
   'documentWrite',
+  'document-write',
   'encryptedMedia',
+  'encrypted-media',
   'executionWhileNotRendered',
+  'execution-while-not-rendered',
   'executionWhileOutOfViewport',
+  'execution-while-out-of-viewport',
   'fontDisplayLateSwap',
+  'font-display-late-swap',
   'fullscreen',
   'geolocation',
   'gyroscope',
   'layoutAnimations',
+  'layout-animations',
   'legacyImageFormats',
+  'legacy-image-formats',
   'loadingFrameDefaultEager',
+  'loading-frame-default-eager',
   'magnetometer',
   'microphone',
   'midi',
   'navigationOverride',
+  'navigation-override',
   'notifications',
   'oversizedImages',
+  'oversized-images',
   'payment',
   'pictureInPicture',
+  'picture-in-picture',
   'publickeyCredentials',
+  'publickey-credentials',
   'push',
   'serial',
   'speaker',
   'syncScript',
+  'sync-script',
   'syncXhr',
+  'sync-xhr',
   'unoptimizedImages',
+  'unoptimized-images',
   'unoptimizedLosslessImages',
+  'unoptimized-lossless-images',
   'unoptimizedLossyImages',
+  'unoptimized-lossy-images',
   'unsizedMedia',
+  'unsized-media',
   'usb',
   'verticalScroll',
+  'vertical-scroll',
   'vibrate',
   'vr',
   'wakeLock',
+  'wake-lock',
   'xr',
   'xrSpatialTracking',
+  'xr-spatial-tracking',
 ];
-
-const DASHED_FEATURE_NAMES = ALLOWED_FEATURE_NAMES.map((feature) => decamelize(feature, '-'));
 
 function app (middleware: ReturnType<typeof featurePolicy>): connect.Server {
   const result = connect();
@@ -198,30 +219,8 @@ describe('featurePolicy', () => {
     }));
   });
 
-  it('can set all values in the allowlist to "*"', () => {
-    return Promise.all(DASHED_FEATURE_NAMES.map(feature => {
-      const features = { [feature]: ['*'] };
-
-      return request(app(featurePolicy({ features })))
-        .get('/')
-        .expect('Feature-Policy', `${dashify(feature) } *`)
-        .expect('Hello world!');
-    }));
-  });
-
   it('can set all values in the allowlist to "self"', () => {
     return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
-      const features = { [feature]: ["'self'"] };
-
-      return request(app(featurePolicy({ features })))
-        .get('/')
-        .expect('Feature-Policy', `${dashify(feature) } 'self'`)
-        .expect('Hello world!');
-    }));
-  });
-
-  it('can set all values in the allowlist to "self"', () => {
-    return Promise.all(DASHED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ["'self'"] };
 
       return request(app(featurePolicy({ features })))
@@ -242,30 +241,8 @@ describe('featurePolicy', () => {
     }));
   });
 
-  it('can set all values in the allowlist to "none"', () => {
-    return Promise.all(DASHED_FEATURE_NAMES.map(feature => {
-      const features = { [feature]: ["'none'"] };
-
-      return request(app(featurePolicy({ features })))
-        .get('/')
-        .expect('Feature-Policy', `${dashify(feature) } 'none'`)
-        .expect('Hello world!');
-    }));
-  });
-
   it('can set all values in the allowlist to domains', () => {
     return Promise.all(ALLOWED_FEATURE_NAMES.map(feature => {
-      const features = { [feature]: ['example.com', 'evanhahn.com'] };
-
-      return request(app(featurePolicy({ features })))
-        .get('/')
-        .expect('Feature-Policy', `${dashify(feature)} example.com evanhahn.com`)
-        .expect('Hello world!');
-    }));
-  });
-
-  it('can set all values in the allowlist to domains', () => {
-    return Promise.all(DASHED_FEATURE_NAMES.map(feature => {
       const features = { [feature]: ['example.com', 'evanhahn.com'] };
 
       return request(app(featurePolicy({ features })))
@@ -292,28 +269,6 @@ describe('featurePolicy', () => {
     expect(actualFeatures).toHaveLength(ALLOWED_FEATURE_NAMES.length);
 
     ALLOWED_FEATURE_NAMES.forEach((feature) => {
-      const expectedStr = `${dashify(feature)} ${feature}.example.com`;
-      expect(actualFeaturesSet.has(expectedStr)).toBeTruthy();
-    });
-  });
-
-  it('can set everything all at once', async () => {
-    const features = DASHED_FEATURE_NAMES.reduce((result, feature) => ({
-      ...result,
-      [feature]: [`${feature}.example.com`],
-    }), {});
-
-    const response = await request(app(featurePolicy({ features })))
-      .get('/')
-      .expect('Hello world!');
-
-    const actualFeatures = response.get('feature-policy').split(';');
-    const actualFeaturesSet = new Set(actualFeatures);
-
-    expect(actualFeatures).toHaveLength(actualFeaturesSet.size);
-    expect(actualFeatures).toHaveLength(DASHED_FEATURE_NAMES.length);
-
-    DASHED_FEATURE_NAMES.forEach((feature) => {
       const expectedStr = `${dashify(feature)} ${feature}.example.com`;
       expect(actualFeaturesSet.has(expectedStr)).toBeTruthy();
     });

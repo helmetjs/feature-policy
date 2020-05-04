@@ -58,10 +58,9 @@ function getHeaderValueFromOptions(options: unknown): string {
     xr: 'xr',
     xrSpatialTracking: 'xr-spatial-tracking',
   };
-  // allow keys to be dashed too
-  Object.entries(FEATURES).forEach(([, v]) => {
-    if (v.includes('-')) {
-      FEATURES[v] = v;
+  Object.values(FEATURES).forEach((feature) => {
+    if (feature.includes('-')) {
+      FEATURES[feature] = feature;
     }
   });
 
