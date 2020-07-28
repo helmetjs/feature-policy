@@ -2,6 +2,8 @@ Feature Policy
 ==============
 [![Build Status](https://travis-ci.org/helmetjs/feature-policy.svg?branch=master)](https://travis-ci.org/helmetjs/feature-policy)
 
+**NOTE: The `Feature-Policy` header has been deprecated by browsers in favor of `Permissions-Policy`. This module will still be supported but no new features will be added.**
+
 This is Express middleware to set the `Feature-Policy` header. You can read more about it [here](https://scotthelme.co.uk/a-new-security-header-feature-policy/) and [here](https://developers.google.com/web/updates/2018/06/feature-policy).
 
 To use:
