@@ -11,7 +11,7 @@
     "connect",
     "feature-policy"
   ],
-  "homepage": "https://helmetjs.github.io/docs/feature-policy/",
+  "homepage": "https://github.com/helmetjs/feature-policy",
   "repository": {
     "type": "git",
     "url": "git://github.com/helmetjs/feature-policy.git"
