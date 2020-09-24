@@ -1,22 +1,10 @@
 # Changelog
 
-## 0.5.0 - 2020-04-16
+## 0.1.0 - 2020-09-25
 ### Added
-- 7 new features: `battery`, `displayCapture`, `executionWhileNotRendered`, `executionWhileOutOfViewport`, `navigationOverride`, `publickeyCredentials`, and `xrSpatialTracking`
-
-## 0.4.0 - 2019-09-01
+- Initial release containing all the adaptations of the [Feature Policy](https://github.com/helmetjs/feature-policy) project to support the new `Permissions-Policy` header.
 ### Changed
-- Drop support for Node <8
-- Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
-- Non-strings are not allowed in the array
-
-## 0.3.0 - 2019-05-05
-### Added
-- 19 new features: `ambientLightSensor`, `documentDomain`, `documentWrite`, `encryptedMedia`, `fontDisplayLateSwap`, `layoutAnimations`, `legacyImageFormats`, `loadingFrameDefaultEager`, `oversizedImages`, `pictureInPicture`, `serial`, `syncScript`, `unoptimizedImages`, `unoptimizedLosslessImages`, `unoptimizedLossyImages`, `unsizedMedia`, `verticalScroll`, `wakeLock`, and `xr`
-- TypeScript definitions. See [#2](https://github.com/helmetjs/feature-policy/issues/2) and [helmet#188](https://github.com/helmetjs/helmet/issues/188)
-- Created a changelog
-
-### Changed
-- Updated some package metadata
-
-Changes in versions 0.2.0 and below can be found in [Helmet's changelog](https://github.com/helmetjs/helmet/blob/master/CHANGELOG.md).
+- Initial release containing all the adaptations of the [Feature Policy](https://github.com/helmetjs/feature-policy) project to support the new `Permissions-Policy` header.
+- If you're migrating from that repo make note that for now on the reserved keywords don't need to be quoted but the specific feature values must be.
+- Added errors to safeguard the usage with the newest changes.
+- Reviewed all the tests.

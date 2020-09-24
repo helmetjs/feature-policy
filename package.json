@@ -1,24 +1,24 @@
 {
-  "name": "feature-policy",
-  "author": "Evan Hahn <me@evanhahn.com> (https://evanhahn.com)",
-  "description": "Middleware to set the Feature-Policy HTTP header",
-  "version": "0.5.0",
+  "name": "permissions-policy",
+  "author": "Pedro Fernandes <pedrogbfernandes@gmail.com>",
+  "description": "Middleware to set the Permissions-Policy HTTP header",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "helmet",
     "security",
     "express",
     "connect",
-    "feature-policy"
+    "permissions-policy"
   ],
-  "homepage": "https://github.com/helmetjs/feature-policy",
+  "homepage": "https://github.com/pedro-gbf/permissions-policy",
   "repository": {
     "type": "git",
-    "url": "git://github.com/helmetjs/feature-policy.git"
+    "url": "git://github.com/pedro-gbf/permissions-policy.git"
   },
   "bugs": {
-    "url": "https://github.com/helmetjs/feature-policy/issues",
-    "email": "me@evanhahn.com"
+    "url": "https://github.com/pedro-gbf/permissions-policy/issues",
+    "email": "pedrogbfernandes@gmail.com"
   },
   "scripts": {
     "pretest": "npm run lint",
