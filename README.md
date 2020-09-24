@@ -1,29 +1,29 @@
-# Feature Policy
+# Permissions Policy
 
-**NOTE: The `Feature-Policy` header has been deprecated by browsers in favor of `Permissions-Policy`. This module will still be supported but no new features will be added.**
+**NOTE: Since the `Feature-Policy` header was deprecated I've decided to adapt the old Evan Hahn `Feature-Policy` repository and adapt it to support it, this project was entirely built on top of his work.**
 
-This is Express middleware to set the `Feature-Policy` header. You can read more about it [here](https://scotthelme.co.uk/a-new-security-header-feature-policy/) and [here](https://developers.google.com/web/updates/2018/06/feature-policy).
+This is Express middleware to set the `Permissions-Policy` header. You can read more about it [here](https://www.w3.org/TR/permissions-policy-1/).
 
 To use:
 
 ```javascript
-const featurePolicy = require("feature-policy");
+import permissionsPolicy from "permissions-policy";
 
 // ...
 
 app.use(
-  featurePolicy({
+  permissionsPolicy({
     features: {
-      fullscreen: ["'self'"],
-      vibrate: ["'none'"],
-      payment: ["example.com"],
-      syncXhr: ["'none'"],
+      fullscreen: ["self"],
+      vibrate: ["none"],
+      payment: ['"example.com"'],
+      syncXhr: ["none"],
     },
   }),
 );
 ```
 
-The following features are supported:
+The following features are currently supported:
 
 - `accelerometer`
 - `ambientLightSensor`

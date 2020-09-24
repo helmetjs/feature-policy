@@ -1,11 +1,17 @@
 import type { IncomingMessage, ServerResponse } from "http";
 
-interface FeaturePolicyOptions {
+interface PermissionsPolicyOptions {
   features: Record<string, string[]>;
 }
 
+const reserveredKeywords = new Set(["self", "src", "*", "none"]);
+
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && !Array.isArray(value) && value !== null;
+}
+
+function isQuoted(value: string) {
+  return /^".*"$/.test(value);
 }
 
 function getHeaderValue(options: unknown): string {
@@ -57,14 +63,14 @@ function getHeaderValue(options: unknown): string {
 
   if (!isPlainObject(options)) {
     throw new Error(
-      "featurePolicy must be called with an object argument. See the documentation.",
+      "permissionsPolicy must be called with an object argument. See the documentation.",
     );
   }
 
   const { features } = options;
   if (!isPlainObject(features)) {
     throw new Error(
-      'featurePolicy must have a single key, "features", which is an object of features. See the documentation.',
+      'permissionsPolicy must have a single key, "features", which is an object of features. See the documentation.',
     );
   }
 
@@ -74,7 +80,7 @@ function getHeaderValue(options: unknown): string {
         !Object.prototype.hasOwnProperty.call(FEATURES, featureKeyCamelCase)
       ) {
         throw new Error(
-          `featurePolicy does not support the "${featureKeyCamelCase}" feature.`,
+          `permissionsPolicy does not support the "${featureKeyCamelCase}" feature.`,
         );
       }
 
@@ -95,10 +101,17 @@ function getHeaderValue(options: unknown): string {
           throw new Error(
             `The value of the "${featureKeyCamelCase}" feature contains duplicates, which it shouldn't.`,
           );
-        } else if (allowedValue === "self") {
-          throw new Error("'self' must be quoted.");
-        } else if (allowedValue === "none") {
-          throw new Error("'none' must be quoted.");
+        } else if (allowedValue === "'self'") {
+          throw new Error("self must not be quoted.");
+        } else if (allowedValue === "'none'") {
+          throw new Error("none must not be quoted.");
+        } else if (allowedValue === "'src'") {
+          throw new Error("src must not be quoted.");
+        } else if (
+          !reserveredKeywords.has(allowedValue) &&
+          !isQuoted(allowedValue)
+        ) {
+          throw new Error("values beside reserved keywords must be quoted.");
         }
         allowedValuesSeen.add(allowedValue);
       });
@@ -116,9 +129,10 @@ function getHeaderValue(options: unknown): string {
       }
 
       const featureKeyDashed = FEATURES[featureKeyCamelCase];
-      return [featureKeyDashed, ...featureValue].join(" ");
+      const featureValuesUnion = featureValue.join(" ");
+      return `${featureKeyDashed}=(${featureValuesUnion})`;
     })
-    .join(";");
+    .join(", ");
 
   if (result.length === 0) {
     throw new Error("At least one feature is required.");
@@ -127,10 +141,12 @@ function getHeaderValue(options: unknown): string {
   return result;
 }
 
-export default function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
+export default function permissionsPolicy(
+  options: Readonly<PermissionsPolicyOptions>,
+) {
   const headerValue = getHeaderValue(options);
   return (_req: IncomingMessage, res: ServerResponse, next: () => void) => {
-    res.setHeader("Feature-Policy", headerValue);
+    res.setHeader("Permissions-Policy", headerValue);
     next();
   };
 }

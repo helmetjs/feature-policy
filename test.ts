@@ -2,10 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import connect from "connect";
 import request from "supertest";
-import dashify from "dashify";
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 
-import featurePolicy from ".";
+import permissionsPolicy from ".";
+
+function dashify(str: string): string {
+  return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+}
 
 const ALLOWED_FEATURE_NAMES = [
   "accelerometer",
@@ -53,7 +56,9 @@ const ALLOWED_FEATURE_NAMES = [
   "xrSpatialTracking",
 ];
 
-function app(middleware: ReturnType<typeof featurePolicy>): connect.Server {
+function app(
+  middleware: ReturnType<typeof permissionsPolicy>,
+): connect.Server {
   const result = connect();
   result.use(middleware);
   result.use((_req: IncomingMessage, res: ServerResponse) => {
@@ -64,20 +69,20 @@ function app(middleware: ReturnType<typeof featurePolicy>): connect.Server {
 
 test("fails without at least 1 feature", () => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  assert.throws(() => (featurePolicy as any)(), Error);
-  assert.throws(() => featurePolicy({} as any), Error);
-  assert.throws(() => featurePolicy({ features: null } as any), Error);
-  assert.throws(() => featurePolicy({ features: {} } as any), Error);
+  assert.throws(() => (permissionsPolicy as any)(), Error);
+  assert.throws(() => permissionsPolicy({} as any), Error);
+  assert.throws(() => permissionsPolicy({ features: null } as any), Error);
+  assert.throws(() => permissionsPolicy({ features: {} } as any), Error);
   /* eslint-enable @typescript-eslint/no-explicit-any */
 });
 
 test("fails with features outside the allowlist", () => {
-  assert.throws(() => featurePolicy({ features: { garbage: ["*"] } }));
+  assert.throws(() => permissionsPolicy({ features: { garbage: ["*"] } }));
 });
 
 test("fails if a feature's value is not an array", () => {
   [
-    "'self'",
+    "self",
     null,
     undefined,
     123,
@@ -89,7 +94,7 @@ test("fails if a feature's value is not an array", () => {
     },
   ].forEach((value) => {
     assert.throws(() =>
-      featurePolicy({
+      permissionsPolicy({
         features: { vibrate: value as any }, // eslint-disable-line @typescript-eslint/no-explicit-any
       }),
     );
@@ -99,39 +104,52 @@ test("fails if a feature's value is not an array", () => {
 test("fails if a feature's value is an array with a non-string", () => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   assert.throws(() =>
-    featurePolicy({
-      features: { vibrate: ["example.com", null] as any },
+    permissionsPolicy({
+      features: { vibrate: ['"example.com"', null] as any },
     }),
   );
   assert.throws(() =>
-    featurePolicy({
-      features: { vibrate: ["example.com", 123] as any },
+    permissionsPolicy({
+      features: { vibrate: ['"example.com"', 123] as any },
     }),
   );
   assert.throws(() =>
-    featurePolicy({
-      features: { vibrate: [new String("example.com")] as any },
+    permissionsPolicy({
+      features: { vibrate: [new String('"example.com"')] as any },
     }),
   );
   /* eslint-enable @typescript-eslint/no-explicit-any */
 });
 
-test('fails if "self" or "none" are not quoted', () => {
+test("fails if reserved keywords are quoted", () => {
   assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["self"] },
+    permissionsPolicy({
+      features: { vibrate: ["'self'"] },
     });
   });
   assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["none"] },
+    permissionsPolicy({
+      features: { vibrate: ["'none'"] },
+    });
+  });
+  assert.throws(() => {
+    permissionsPolicy({
+      features: { vibrate: ["'src'"] },
+    });
+  });
+});
+
+test("fails if non-reserved values are not quoted", () => {
+  assert.throws(() => {
+    permissionsPolicy({
+      features: { vibrate: ["example.com"] },
     });
   });
 });
 
 test("fails if a feature's value is an empty array", () => {
   assert.throws(() => {
-    featurePolicy({
+    permissionsPolicy({
       features: { vibrate: [] },
     });
   });
@@ -139,67 +157,56 @@ test("fails if a feature's value is an empty array", () => {
 
 test('fails if a feature value contains "*" and additional values', () => {
   assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["*", "example.com"] },
+    permissionsPolicy({
+      features: { vibrate: ["*", '"example.com"'] },
     });
   });
   assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["example.com", "*"] },
-    });
-  });
-});
-
-test('fails if a feature value contains "none" and additional values', () => {
-  assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["'none'", "example.com"] },
-    });
-  });
-  assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["example.com", "'none'"] },
+    permissionsPolicy({
+      features: { vibrate: ['"example.com"', "*"] },
     });
   });
 });
 
 test("fails if a feature value contains duplicates", () => {
   assert.throws(() => {
-    featurePolicy({
-      features: { vibrate: ["example.com", "example.com"] },
+    permissionsPolicy({
+      features: { vibrate: ['"example.com"', '"example.com"'] },
     });
   });
 });
 
 test('can set "vibrate" to "*"', async () => {
-  await request(app(featurePolicy({ features: { vibrate: ["*"] } })))
+  await request(app(permissionsPolicy({ features: { vibrate: ["*"] } })))
     .get("/")
-    .expect("Feature-Policy", "vibrate *")
+    .expect("Permissions-Policy", "vibrate=(*)")
     .expect("Hello world!");
 });
 
 test('can set "vibrate" to "self"', async () => {
-  await request(app(featurePolicy({ features: { vibrate: ["'self'"] } })))
+  await request(app(permissionsPolicy({ features: { vibrate: ["self"] } })))
     .get("/")
-    .expect("Feature-Policy", "vibrate 'self'")
+    .expect("Permissions-Policy", "vibrate=(self)")
     .expect("Hello world!");
 });
 
 test('can set "vibrate" to "none"', async () => {
-  await request(app(featurePolicy({ features: { vibrate: ["'none'"] } })))
+  await request(app(permissionsPolicy({ features: { vibrate: ["none"] } })))
     .get("/")
-    .expect("Feature-Policy", "vibrate 'none'")
+    .expect("Permissions-Policy", "vibrate=(none)")
     .expect("Hello world!");
 });
 
 test('can set "vibrate" to contain domains', async () => {
   await request(
     app(
-      featurePolicy({ features: { vibrate: ["example.com", "evanhahn.com"] } }),
+      permissionsPolicy({
+        features: { vibrate: ['"example.com"', '"evanhahn.com"'] },
+      }),
     ),
   )
     .get("/")
-    .expect("Feature-Policy", "vibrate example.com evanhahn.com")
+    .expect("Permissions-Policy", 'vibrate=("example.com" "evanhahn.com")')
     .expect("Hello world!");
 });
 
@@ -208,9 +215,9 @@ test('can set all values in the allowlist to "*"', async () => {
     ALLOWED_FEATURE_NAMES.map(async (feature) => {
       const features = { [feature]: ["*"] };
 
-      await request(app(featurePolicy({ features })))
+      await request(app(permissionsPolicy({ features })))
         .get("/")
-        .expect("Feature-Policy", `${dashify(feature)} *`)
+        .expect("Permissions-Policy", `${dashify(feature)}=(*)`)
         .expect("Hello world!");
     }),
   );
@@ -219,11 +226,11 @@ test('can set all values in the allowlist to "*"', async () => {
 test('can set all values in the allowlist to "self"', async () => {
   await Promise.all(
     ALLOWED_FEATURE_NAMES.map(async (feature) => {
-      const features = { [feature]: ["'self'"] };
+      const features = { [feature]: ["self"] };
 
-      await request(app(featurePolicy({ features })))
+      await request(app(permissionsPolicy({ features })))
         .get("/")
-        .expect("Feature-Policy", `${dashify(feature)} 'self'`)
+        .expect("Permissions-Policy", `${dashify(feature)}=(self)`)
         .expect("Hello world!");
     }),
   );
@@ -232,11 +239,11 @@ test('can set all values in the allowlist to "self"', async () => {
 test('can set all values in the allowlist to "none"', async () => {
   await Promise.all(
     ALLOWED_FEATURE_NAMES.map(async (feature) => {
-      const features = { [feature]: ["'none'"] };
+      const features = { [feature]: ["none"] };
 
-      await request(app(featurePolicy({ features })))
+      await request(app(permissionsPolicy({ features })))
         .get("/")
-        .expect("Feature-Policy", `${dashify(feature)} 'none'`)
+        .expect("Permissions-Policy", `${dashify(feature)}=(none)`)
         .expect("Hello world!");
     }),
   );
@@ -245,13 +252,13 @@ test('can set all values in the allowlist to "none"', async () => {
 test("can set all values in the allowlist to domains", async () => {
   await Promise.all(
     ALLOWED_FEATURE_NAMES.map(async (feature) => {
-      const features = { [feature]: ["example.com", "evanhahn.com"] };
+      const features = { [feature]: ['"example.com"', '"evanhahn.com"'] };
 
-      await request(app(featurePolicy({ features })))
+      await request(app(permissionsPolicy({ features })))
         .get("/")
         .expect(
-          "Feature-Policy",
-          `${dashify(feature)} example.com evanhahn.com`,
+          "Permissions-Policy",
+          `${dashify(feature)}=("example.com" "evanhahn.com")`,
         )
         .expect("Hello world!");
     }),
@@ -262,23 +269,24 @@ test("can set everything all at once", async () => {
   const features = ALLOWED_FEATURE_NAMES.reduce(
     (result, feature) => ({
       ...result,
-      [feature]: [`${feature}.example.com`],
+      [feature]: [`"${feature}.example.com"`],
     }),
     {},
   );
 
-  const response = await request(app(featurePolicy({ features })))
+  const response = await request(app(permissionsPolicy({ features })))
     .get("/")
     .expect("Hello world!");
 
-  const actualFeatures = response.get("feature-policy")?.split(";") ?? [];
+  const actualFeatures =
+    response.get("permissions-policy")?.split(", ") ?? [];
   const actualFeaturesSet = new Set(actualFeatures);
 
   assert.equal(actualFeatures.length, actualFeaturesSet.size);
   assert.equal(actualFeatures.length, ALLOWED_FEATURE_NAMES.length);
 
   ALLOWED_FEATURE_NAMES.forEach((feature) => {
-    const expectedStr = `${dashify(feature)} ${feature}.example.com`;
+    const expectedStr = `${dashify(feature)}=("${feature}.example.com")`;
     assert(actualFeaturesSet.has(expectedStr));
   });
 });

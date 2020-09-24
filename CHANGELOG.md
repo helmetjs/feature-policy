@@ -28,7 +28,7 @@
 
 ### Changed
 
-- Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
+- Duplicate values are no longer allowed
 - Non-strings are not allowed in the array
 
 ### Removed
@@ -40,11 +40,21 @@
 ### Added
 
 - 19 new features: `ambientLightSensor`, `documentDomain`, `documentWrite`, `encryptedMedia`, `fontDisplayLateSwap`, `layoutAnimations`, `legacyImageFormats`, `loadingFrameDefaultEager`, `oversizedImages`, `pictureInPicture`, `serial`, `syncScript`, `unoptimizedImages`, `unoptimizedLosslessImages`, `unoptimizedLossyImages`, `unsizedMedia`, `verticalScroll`, `wakeLock`, and `xr`
-- TypeScript definitions. See [#2](https://github.com/helmetjs/feature-policy/issues/2) and [helmet#188](https://github.com/helmetjs/helmet/issues/188)
+- TypeScript definitions
 - Created a changelog
 
 ### Changed
 
 - Updated some package metadata
 
-Changes in versions 0.2.0 and below can be found in [Helmet's changelog](https://github.com/helmetjs/helmet/blob/master/CHANGELOG.md).
+## 0.1.0 - 2020-09-25
+
+### Added
+
+- Initial release containing all the adaptations of the [Feature Policy](https://github.com/helmetjs/feature-policy) project to support the new `Permissions-Policy` header.
+
+### Changed
+
+- If you're migrating from feature-policy, note that reserved keywords don't need to be quoted but specific feature values must be.
+- Added errors to safeguard the usage with the newest changes.
+- Reviewed all the tests.
