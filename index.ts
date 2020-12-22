@@ -127,7 +127,7 @@ function getHeaderValueFromOptions(options: unknown): string {
   return result;
 }
 
-export = function featurePolicy(options: FeaturePolicyOptions) {
+export = function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
   const headerValue = getHeaderValueFromOptions(options);
 
   return function featurePolicy(
