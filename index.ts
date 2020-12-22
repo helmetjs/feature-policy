@@ -1,15 +1,15 @@
 import { IncomingMessage, ServerResponse } from "http";
 
 interface FeaturePolicyOptions {
-  features: { [featureName: string]: string[] };
+  features: Record<string, string[]>;
 }
 
-function isPlainObject(value: unknown): value is { [key: string]: unknown } {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && !Array.isArray(value) && value !== null;
 }
 
 function getHeaderValueFromOptions(options: unknown): string {
-  const FEATURES: { [featureKeyCamelCase: string]: string } = {
+  const FEATURES: Record<string, string> = {
     accelerometer: "accelerometer",
     ambientLightSensor: "ambient-light-sensor",
     autoplay: "autoplay",
