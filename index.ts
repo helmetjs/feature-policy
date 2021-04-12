@@ -25,6 +25,7 @@ function getHeaderValueFromOptions(options: unknown): string {
     fullscreen: "fullscreen",
     geolocation: "geolocation",
     gyroscope: "gyroscope",
+    interestCohort: "interest-cohort",
     layoutAnimations: "layout-animations",
     legacyImageFormats: "legacy-image-formats",
     loadingFrameDefaultEager: "loading-frame-default-eager",
