@@ -76,8 +76,13 @@ test("fails without at least 1 feature", () => {
   /* eslint-enable @typescript-eslint/no-explicit-any */
 });
 
-test("fails with features outside the allowlist", () => {
-  assert.throws(() => permissionsPolicy({ features: { garbage: ["*"] } }));
+test("allows any feature name", async () => {
+  await request(
+    app(permissionsPolicy({ features: { customFeature: ["*"] } })),
+  )
+    .get("/")
+    .expect("Permissions-Policy", "custom-feature=(*)")
+    .expect("Hello world!");
 });
 
 test("fails if a feature's value is not an array", () => {

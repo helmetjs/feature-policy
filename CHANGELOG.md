@@ -6,6 +6,10 @@
 
 - ESM support
 
+### Changed
+
+- Removed restrictions on which directives can be set; any key is allowed
+
 ### Removed
 
 - **Breaking:** Dropped support for old Node versions. Node 18+ is now required
