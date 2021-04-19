@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 - 2021-04-19
 
 ### Added
 
@@ -8,7 +8,15 @@
 
 ### Changed
 
-- Removed restrictions on which directives can be set; any key is allowed
+- Removed restrictions on which directives can be set, any key is allowed.
+- Added interest-cohort to the documentation.
+
+## 0.5.0 - 2021-04-14
+
+### Added
+
+- Added support for interest-cohort policy.
+- Change compilation target to ES6.
 
 ### Removed
 

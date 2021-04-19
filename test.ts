@@ -56,9 +56,7 @@ const ALLOWED_FEATURE_NAMES = [
   "xrSpatialTracking",
 ];
 
-function app(
-  middleware: ReturnType<typeof permissionsPolicy>,
-): connect.Server {
+function app(middleware: ReturnType<typeof permissionsPolicy>): connect.Server {
   const result = connect();
   result.use(middleware);
   result.use((_req: IncomingMessage, res: ServerResponse) => {
@@ -77,9 +75,7 @@ test("fails without at least 1 feature", () => {
 });
 
 test("allows any feature name", async () => {
-  await request(
-    app(permissionsPolicy({ features: { customFeature: ["*"] } })),
-  )
+  await request(app(permissionsPolicy({ features: { customFeature: ["*"] } })))
     .get("/")
     .expect("Permissions-Policy", "custom-feature=(*)")
     .expect("Hello world!");
@@ -283,8 +279,7 @@ test("can set everything all at once", async () => {
     .get("/")
     .expect("Hello world!");
 
-  const actualFeatures =
-    response.get("permissions-policy")?.split(", ") ?? [];
+  const actualFeatures = response.get("permissions-policy")?.split(", ") ?? [];
   const actualFeaturesSet = new Set(actualFeatures);
 
   assert.equal(actualFeatures.length, actualFeaturesSet.size);
