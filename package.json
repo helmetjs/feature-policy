@@ -44,20 +44,20 @@
     "dist/index.d.ts"
   ],
   "devDependencies": {
-    "@types/connect": "^3.4.34",
-    "@types/dashify": "^1.0.0",
-    "@types/jest": "^26.0.23",
+    "@types/connect": "^3.4.35",
+    "@types/dashify": "^1.0.1",
+    "@types/jest": "^26.0.24",
     "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
     "connect": "^3.7.0",
     "dashify": "^2.0.0",
-    "eslint": "^7.27.0",
+    "eslint": "^7.31.0",
     "eslint-config-helmet": "^0.2.0",
-    "jest": "^27.0.4",
-    "prettier": "^2.3.0",
-    "supertest": "^6.1.3",
-    "ts-jest": "^27.0.2",
-    "typescript": "^4.3.2"
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "supertest": "^6.1.4",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5"
   }
 }
