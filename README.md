@@ -23,7 +23,7 @@ app.use(
 );
 ```
 
-The following features are currently supported:
+The following features are supported:
 
 - `accelerometer`
 - `ambientLightSensor`
