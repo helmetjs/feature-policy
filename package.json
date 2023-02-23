@@ -25,8 +25,8 @@
     "prepublishOnly": "npm run build",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint \"**/*.ts\"",
-    "lint:prettier": "prettier --check \"**/*.{md,js,json,ts}\"",
-    "format": "prettier --write \"**/*.{md,js,json,ts}\"",
+    "lint:prettier": "prettier --check .",
+    "format": "prettier --write .",
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc",
     "test": "jest --config test/jest-config.json"
