@@ -1,4 +1,4 @@
-import { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 
 interface FeaturePolicyOptions {
   features: Record<string, string[]>;
