@@ -19,7 +19,7 @@ app.use(
       payment: ["example.com"],
       syncXhr: ["'none'"],
     },
-  })
+  }),
 );
 ```
 

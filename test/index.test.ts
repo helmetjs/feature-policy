@@ -74,7 +74,7 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { garbage: ["*"] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -94,7 +94,7 @@ describe("featurePolicy", () => {
       expect(
         featurePolicy.bind(null, {
           features: { vibrate: value as any }, // eslint-disable-line @typescript-eslint/no-explicit-any
-        })
+        }),
       ).toThrow();
     });
   });
@@ -104,17 +104,17 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["example.com", null] as any },
-      })
+      }),
     ).toThrow();
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["example.com", 123] as any },
-      })
+      }),
     ).toThrow();
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: [new String("example.com")] as any }, // eslint-disable-line no-new-wrappers
-      })
+      }),
     ).toThrow();
     /* eslint-enable @typescript-eslint/no-explicit-any */
   });
@@ -123,12 +123,12 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["self"] },
-      })
+      }),
     ).toThrow();
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["none"] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -136,7 +136,7 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: [] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -144,12 +144,12 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["*", "example.com"] },
-      })
+      }),
     ).toThrow();
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["example.com", "*"] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -157,12 +157,12 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["'none'", "example.com"] },
-      })
+      }),
     ).toThrow();
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["example.com", "'none'"] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -170,7 +170,7 @@ describe("featurePolicy", () => {
     expect(
       featurePolicy.bind(null, {
         features: { vibrate: ["example.com", "example.com"] },
-      })
+      }),
     ).toThrow();
   });
 
@@ -179,8 +179,8 @@ describe("featurePolicy", () => {
       app(
         featurePolicy({
           features: { vibrate: ["*"] },
-        })
-      )
+        }),
+      ),
     )
       .get("/")
       .expect("Feature-Policy", "vibrate *")
@@ -192,8 +192,8 @@ describe("featurePolicy", () => {
       app(
         featurePolicy({
           features: { vibrate: ["'self'"] },
-        })
-      )
+        }),
+      ),
     )
       .get("/")
       .expect("Feature-Policy", "vibrate 'self'")
@@ -205,8 +205,8 @@ describe("featurePolicy", () => {
       app(
         featurePolicy({
           features: { vibrate: ["'none'"] },
-        })
-      )
+        }),
+      ),
     )
       .get("/")
       .expect("Feature-Policy", "vibrate 'none'")
@@ -218,8 +218,8 @@ describe("featurePolicy", () => {
       app(
         featurePolicy({
           features: { vibrate: ["example.com", "evanhahn.com"] },
-        })
-      )
+        }),
+      ),
     )
       .get("/")
       .expect("Feature-Policy", "vibrate example.com evanhahn.com")
@@ -235,7 +235,7 @@ describe("featurePolicy", () => {
           .get("/")
           .expect("Feature-Policy", `${dashify(feature)} *`)
           .expect("Hello world!");
-      })
+      }),
     );
   });
 
@@ -248,7 +248,7 @@ describe("featurePolicy", () => {
           .get("/")
           .expect("Feature-Policy", `${dashify(feature)} 'self'`)
           .expect("Hello world!");
-      })
+      }),
     );
   });
 
@@ -261,7 +261,7 @@ describe("featurePolicy", () => {
           .get("/")
           .expect("Feature-Policy", `${dashify(feature)} 'none'`)
           .expect("Hello world!");
-      })
+      }),
     );
   });
 
@@ -274,10 +274,10 @@ describe("featurePolicy", () => {
           .get("/")
           .expect(
             "Feature-Policy",
-            `${dashify(feature)} example.com evanhahn.com`
+            `${dashify(feature)} example.com evanhahn.com`,
           )
           .expect("Hello world!");
-      })
+      }),
     );
   });
 
@@ -287,7 +287,7 @@ describe("featurePolicy", () => {
         ...result,
         [feature]: [`${feature}.example.com`],
       }),
-      {}
+      {},
     );
 
     const response = await request(app(featurePolicy({ features })))
@@ -311,7 +311,7 @@ describe("featurePolicy", () => {
     expect(featurePolicy.name).toBe(
       featurePolicy({
         features: { vibrate: ["*"] },
-      }).name
+      }).name,
     );
   });
 });
