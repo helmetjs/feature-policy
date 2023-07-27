@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Removed
+
+- **Breaking:** Dropped support for old Node versions. Node 18+ is now required
+
 ## 0.6.0 - 2020-12-22
 
 ### Changed
@@ -17,9 +23,12 @@
 
 ### Changed
 
-- Drop support for Node <8
 - Duplicate values are no longer allowed. See [#4](https://github.com/helmetjs/feature-policy/issues/4)
 - Non-strings are not allowed in the array
+
+### Removed
+
+- **Breaking:** Drop support for Node <8
 
 ## 0.3.0 - 2019-05-05
 
