@@ -110,7 +110,7 @@ test("fails if a feature's value is an array with a non-string", () => {
   );
   assert.throws(() =>
     featurePolicy({
-      features: { vibrate: [new String("example.com")] as any }, // eslint-disable-line no-new-wrappers
+      features: { vibrate: [new String("example.com")] as any },
     }),
   );
   /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -271,7 +271,7 @@ test("can set everything all at once", async () => {
     .get("/")
     .expect("Hello world!");
 
-  const actualFeatures = response.get("feature-policy").split(";");
+  const actualFeatures = response.get("feature-policy")?.split(";") ?? [];
   const actualFeaturesSet = new Set(actualFeatures);
 
   assert.equal(actualFeatures.length, actualFeaturesSet.size);
