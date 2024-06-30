@@ -5,7 +5,7 @@ import request from "supertest";
 import dashify from "dashify";
 import { IncomingMessage, ServerResponse } from "http";
 
-import featurePolicy = require(".");
+import featurePolicy from ".";
 
 const ALLOWED_FEATURE_NAMES = [
   "accelerometer",

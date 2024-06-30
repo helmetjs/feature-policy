@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- ESM support
+
 ### Removed
 
 - **Breaking:** Dropped support for old Node versions. Node 18+ is now required

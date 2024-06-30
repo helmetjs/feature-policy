@@ -127,7 +127,7 @@ function getHeaderValueFromOptions(options: unknown): string {
   return result;
 }
 
-export = function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
+export default function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
   const headerValue = getHeaderValueFromOptions(options);
 
   return function featurePolicy(
@@ -138,4 +138,4 @@ export = function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
     res.setHeader("Feature-Policy", headerValue);
     next();
   };
-};
+}
