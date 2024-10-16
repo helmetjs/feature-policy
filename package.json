@@ -55,20 +55,20 @@
     "dist"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.3.0",
+    "@eslint/js": "^9.12.0",
     "@types/connect": "^3.4.38",
     "@types/dashify": "^1.0.3",
     "@types/node": "^20.12.12",
     "@types/supertest": "^6.0.2",
     "connect": "^3.7.0",
     "dashify": "^2.0.0",
-    "eslint": "^9.3.0",
-    "globals": "^15.3.0",
+    "eslint": "^9.12.0",
+    "globals": "^15.11.0",
     "prettier": "^3.2.5",
     "supertest": "^7.0.0",
     "tsup": "^8.1.0",
     "tsx": "^4.16.0",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0-alpha.16"
+    "typescript-eslint": "^8.9.0"
   }
 }
