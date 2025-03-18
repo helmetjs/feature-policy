@@ -282,13 +282,3 @@ test("can set everything all at once", async () => {
     assert(actualFeaturesSet.has(expectedStr));
   });
 });
-
-test("names its function and middleware", () => {
-  assert.equal(featurePolicy.name, "featurePolicy");
-  assert.equal(
-    featurePolicy.name,
-    featurePolicy({
-      features: { vibrate: ["*"] },
-    }).name,
-  );
-});

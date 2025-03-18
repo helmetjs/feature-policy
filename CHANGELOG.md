@@ -9,6 +9,7 @@
 ### Removed
 
 - **Breaking:** Dropped support for old Node versions. Node 18+ is now required
+- **Breaking:** The returned middleware no longer has a `name` property. This is unlikely to be an issue for most people
 
 ## 0.6.0 - 2020-12-22
 

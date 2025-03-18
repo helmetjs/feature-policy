@@ -129,12 +129,7 @@ function getHeaderValueFromOptions(options: unknown): string {
 
 export default function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
   const headerValue = getHeaderValueFromOptions(options);
-
-  return function featurePolicy(
-    _req: IncomingMessage,
-    res: ServerResponse,
-    next: () => void,
-  ) {
+  return (_req: IncomingMessage, res: ServerResponse, next: () => void) => {
     res.setHeader("Feature-Policy", headerValue);
     next();
   };
