@@ -8,7 +8,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && !Array.isArray(value) && value !== null;
 }
 
-function getHeaderValueFromOptions(options: unknown): string {
+function getHeaderValue(options: unknown): string {
   const FEATURES: Record<string, string> = {
     accelerometer: "accelerometer",
     ambientLightSensor: "ambient-light-sensor",
@@ -128,7 +128,7 @@ function getHeaderValueFromOptions(options: unknown): string {
 }
 
 export default function featurePolicy(options: Readonly<FeaturePolicyOptions>) {
-  const headerValue = getHeaderValueFromOptions(options);
+  const headerValue = getHeaderValue(options);
   return (_req: IncomingMessage, res: ServerResponse, next: () => void) => {
     res.setHeader("Feature-Policy", headerValue);
     next();
