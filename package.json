@@ -56,17 +56,17 @@
     "@eslint/js": "^10.0.1",
     "@types/connect": "^3.4.38",
     "@types/dashify": "^1.0.3",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.0.0",
     "@types/supertest": "^7.2.0",
     "connect": "^3.7.0",
     "dashify": "^2.0.0",
-    "eslint": "^10.1.0",
-    "globals": "^17.4.0",
-    "prettier": "^3.8.1",
+    "eslint": "^10.5.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.4",
     "supertest": "^7.2.2",
     "tsup": "^8.5.1",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.1"
   }
 }
