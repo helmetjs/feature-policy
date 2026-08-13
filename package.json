@@ -14,7 +14,7 @@
   "homepage": "https://github.com/helmetjs/feature-policy",
   "repository": {
     "type": "git",
-    "url": "git://github.com/helmetjs/feature-policy.git"
+    "url": "https://github.com/helmetjs/feature-policy.git"
   },
   "bugs": {
     "url": "https://github.com/helmetjs/feature-policy/issues",
